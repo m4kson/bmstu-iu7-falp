@@ -1,0 +1,6 @@
+(print (and 'fee 'fie 'foe))
+(print (or nil 'fie 'foe))
+(print (and (equal 'abc 'abc) 'yes))
+(print (or 'fee 'fie 'foe))
+(print (and nil 'fie 'foe))
+(print (or (equal 'abc 'abc) 'yes))
