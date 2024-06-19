@@ -259,9 +259,10 @@
 )
 
 
+;(print (qz_iteration_a A C))
 
 
-;(print (inv_matrix C))
-;(print (determinant B))
-(print (qz-z A C ))
+;(print (mul_matrix (mul_matrix (transpose_matrix (qz-q A C)) A) (qz-z A C)))
+
+(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
 
