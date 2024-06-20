@@ -1,6 +1,3 @@
-(load "/Users/m4ks0n/.sbclrc")
-(ql:quickload "fiveam")
-
 (defun scalar_mul_vector (vector1 vector2)
     (reduce #'+ (mapcar #'* vector1 vector2))
 )
@@ -107,11 +104,20 @@
     (fliplr (flipud (transpose_matrix(qr_r (transpose_matrix (fliplr (flipud matrix)))))))
 )
 
+; (defun minor (matrix row-index column-index)
+;   "Находит минор матрицы для заданных индексов строки и столбца."
+;   (mapcar #'(lambda (row)
+;               (remove (nth column-index row) row))
+;           (remove (nth row-index matrix) matrix)))
+
 (defun minor (matrix row-index column-index)
   "Находит минор матрицы для заданных индексов строки и столбца."
-  (mapcar #'(lambda (row)
-              (remove (nth column-index row) row))
+  (mapcar (lambda (row)
+            (concatenate 'list
+                         (subseq row 0 column-index)
+                         (subseq row (1+ column-index))))
           (remove (nth row-index matrix) matrix)))
+
 
 (defun determinant-helper (matrix j)
   (if (>= j (length matrix))
@@ -261,14 +267,60 @@
 		  (2 3 6))
 )
 
-(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
+; (setf A5 '((1 2 3 4 5)
+;           (6 7 8 1 1)
+;           (11 2 7 14 15)
+;           (1 17 18 12 20)
+;           (9 24 23 6 25)))
 
-;test1
+; (setf B5 '((5 4 5 2 1)
+;           (2 2 2 4 5)
+;           (8 14 3 2 1)
+;           (1 2 9 6 15)
+;           (15 3 3 9 18)))
+
+
+(setf A5 '((1 2 3 4 5)
+          (6 7 8 1 1)
+          (0 2 7 14 15)
+          (0 0 18 12 20)
+          (0 0 0 6 25)))
+
+(setf B5 '((5 4 5 2 1)
+          (0 2 2 4 5)
+          (0 0 3 2 1)
+          (0 0 0 6 15)
+          (0 0 0 0 18)))
+
+
+
+
+;(print (mul_matrix (qz-q A5 B5) (transpose_matrix (qz-q A5 B5))))
+
+; ;(print (qz_iteration_a A C))
+
+
+;(print (mul_matrix (mul_matrix (transpose_matrix (qz-q A C)) A) (qz-z A C)))
+
+;(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
+
+
+(load "/Users/m4ks0n/.sbclrc")
+(ql:quickload "fiveam")
+
+
+(fiveam:def-suite positives)
+(fiveam:def-suite positives)
+
+(fiveam:in-suite positives)
+
 (fiveam:test test_1_check_Q_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-q A C) (transpose_matrix (qz-q A C))) (eye (length A)) 1e-4)))
+  (fiveam:is (matrix_compare (mul_matrix (qz-q A C) (transpose_matrix (qz-q A C))) (eye (length A)) 1e-4))
+)
 
 (fiveam:test test_1_check_Z_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-z A C) (transpose_matrix (qz-z A C))) (eye (length A)) 1e-4)))
+  (fiveam:is (matrix_compare (mul_matrix (qz-z A C) (transpose_matrix (qz-z A C))) (eye (length A)) 1e-4))
+)
 
 (fiveam:test test_1_check_S
     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))) A 1e-3))
@@ -278,22 +330,26 @@
     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-t A C)) (transpose_matrix (qz-z A C))) C 1e-3))
 )
 
-; (fiveam:test test_2
-;   (fiveam:is (equal (rec '(c 1 d (d (2 (-3)) a) 0 4 b -6)) '(-6 -3 4 2 1))))
+(fiveam:test test_2_check_Q_ort
+  (fiveam:is (matrix_compare (mul_matrix (qz-q A5 B5) (transpose_matrix (qz-q A5 B5))) (eye (length B5)) 1e-3))
+)
 
-; (fiveam:test test_3
-;   (fiveam:is (equal (rec '(d -2 1 nil 3 -2 #(9) t)) '(-2 -2 3 1))))
+(fiveam:test test_2_check_Z_ort
+  (fiveam:is (matrix_compare (mul_matrix (qz-z A5 B5) (transpose_matrix (qz-z A5 B5))) (eye (length A5)) 1e-4))
+)
 
-; (fiveam:test test_4
-;   (fiveam:is (equal (rec '(a d b)) '())))
+(fiveam:test test_2_check_S
+    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-s A5 B5)) (transpose_matrix (qz-z A5 B5))) A5 1e-3))
+)
+
+(fiveam:test test_2_check_T
+    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-t A5 B5)) (transpose_matrix (qz-z A5 B5))) B5 1e-3))
+)
+
+
+; (fiveam:in-suite test2)
+
 
 (fiveam:run!)
 
-
-;(print (qz_iteration_a A C))
-
-
-;(print (mul_matrix (mul_matrix (transpose_matrix (qz-q A C)) A) (qz-z A C)))
-
-;(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
 
