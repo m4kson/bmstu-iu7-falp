@@ -1,3 +1,6 @@
+(load "/Users/m4ks0n/.sbclrc")
+(ql:quickload "fiveam")
+
 (defun scalar_mul_vector (vector1 vector2)
     (reduce #'+ (mapcar #'* vector1 vector2))
 )
@@ -258,11 +261,39 @@
 		  (2 3 6))
 )
 
+(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
+
+;test1
+(fiveam:test test_1_check_Q_ort
+  (fiveam:is (matrix_compare (mul_matrix (qz-q A C) (transpose_matrix (qz-q A C))) (eye (length A)) 1e-4)))
+
+(fiveam:test test_1_check_Z_ort
+  (fiveam:is (matrix_compare (mul_matrix (qz-z A C) (transpose_matrix (qz-z A C))) (eye (length A)) 1e-4)))
+
+(fiveam:test test_1_check_S
+    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))) A 1e-3))
+)
+
+(fiveam:test test_1_check_T
+    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-t A C)) (transpose_matrix (qz-z A C))) C 1e-3))
+)
+
+; (fiveam:test test_2
+;   (fiveam:is (equal (rec '(c 1 d (d (2 (-3)) a) 0 4 b -6)) '(-6 -3 4 2 1))))
+
+; (fiveam:test test_3
+;   (fiveam:is (equal (rec '(d -2 1 nil 3 -2 #(9) t)) '(-2 -2 3 1))))
+
+; (fiveam:test test_4
+;   (fiveam:is (equal (rec '(a d b)) '())))
+
+(fiveam:run!)
+
 
 ;(print (qz_iteration_a A C))
 
 
 ;(print (mul_matrix (mul_matrix (transpose_matrix (qz-q A C)) A) (qz-z A C)))
 
-(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
+;(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
 
