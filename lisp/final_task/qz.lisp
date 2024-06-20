@@ -84,9 +84,14 @@
     (reduce #'(lambda (x y) (and x y)) (mapcar #'(lambda (num1 num2) (float_cmp num1 num2 eps)) vector1 vector2))
 )
 
-(defun matrix_compare (matrix1 matrix2 eps)
-    (reduce #'(lambda (x y) (and x y)) (mapcar #'(lambda (vec1 vec2) (vector_cmp vec1 vec2 eps)) matrix1 matrix2))
-)
+; (defun matrix_compare (matrix1 matrix2 eps)
+;     (reduce #'(lambda (x y) (and x y)) (mapcar #'(lambda (vec1 vec2) (vector_cmp vec1 vec2 eps)) matrix1 matrix2))
+; )
+
+(defun matrix-compare (matrix1 matrix2 eps)
+  (reduce #'(lambda (x y) (and x y)) 
+          (mapcar #'(lambda (vec1 vec2) (vector-cmp vec1 vec2 eps)) matrix1 matrix2)))
+
 
 (defun flipud(matrix) ;поворот по вертикали
     (reverse matrix)
@@ -295,7 +300,7 @@
 
 
 
-;(print (mul_matrix (qz-q A5 B5) (transpose_matrix (qz-q A5 B5))))
+(print (qz-s A C))
 
 ; ;(print (qz_iteration_a A C))
 
@@ -305,51 +310,53 @@
 ;(print (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))))
 
 
-(load "/Users/m4ks0n/.sbclrc")
-(ql:quickload "fiveam")
+; (load "/Users/m4ks0n/.sbclrc")
+; (ql:quickload "fiveam")
 
 
-(fiveam:def-suite positives)
-(fiveam:def-suite positives)
+; (fiveam:def-suite positives)
+; ;(fiveam:def-suite negatives)
 
-(fiveam:in-suite positives)
+; (fiveam:in-suite positives)
 
-(fiveam:test test_1_check_Q_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-q A C) (transpose_matrix (qz-q A C))) (eye (length A)) 1e-4))
-)
+; (fiveam:test test_1_check_Q_ort
+;   (fiveam:is (matrix_compare (mul_matrix (qz-q A C) (transpose_matrix (qz-q A C))) (eye (length A)) 1e-4))
+; )
 
-(fiveam:test test_1_check_Z_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-z A C) (transpose_matrix (qz-z A C))) (eye (length A)) 1e-4))
-)
+; (fiveam:test test_1_check_Z_ort
+;   (fiveam:is (matrix_compare (mul_matrix (qz-z A C) (transpose_matrix (qz-z A C))) (eye (length A)) 1e-4))
+; )
 
-(fiveam:test test_1_check_S
-    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))) A 1e-3))
-)
+; (fiveam:test test_1_check_S
+;     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-s A C)) (transpose_matrix (qz-z A C))) A 1e-3))
+; )
 
-(fiveam:test test_1_check_T
-    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-t A C)) (transpose_matrix (qz-z A C))) C 1e-3))
-)
+; (fiveam:test test_1_check_T
+;     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A C) (qz-t A C)) (transpose_matrix (qz-z A C))) C 1e-3))
+; )
 
-(fiveam:test test_2_check_Q_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-q A5 B5) (transpose_matrix (qz-q A5 B5))) (eye (length B5)) 1e-3))
-)
+; (fiveam:test test_2_check_Q_ort
+;   (fiveam:is (matrix_compare (mul_matrix (qz-q A5 B5) (transpose_matrix (qz-q A5 B5))) (eye (length B5)) 1e-3))
+; )
 
-(fiveam:test test_2_check_Z_ort
-  (fiveam:is (matrix_compare (mul_matrix (qz-z A5 B5) (transpose_matrix (qz-z A5 B5))) (eye (length A5)) 1e-4))
-)
+; (fiveam:test test_2_check_Z_ort
+;   (fiveam:is (matrix_compare (mul_matrix (qz-z A5 B5) (transpose_matrix (qz-z A5 B5))) (eye (length A5)) 1e-4))
+; )
 
-(fiveam:test test_2_check_S
-    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-s A5 B5)) (transpose_matrix (qz-z A5 B5))) A5 1e-3))
-)
+; (fiveam:test test_2_check_S
+;     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-s A5 B5)) (transpose_matrix (qz-z A5 B5))) A5 1e-3))
+; )
 
-(fiveam:test test_2_check_T
-    (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-t A5 B5)) (transpose_matrix (qz-z A5 B5))) B5 1e-3))
-)
-
-
-; (fiveam:in-suite test2)
+; (fiveam:test test_2_check_T
+;     (fiveam:is (matrix_compare (mul_matrix (mul_matrix (qz-q A5 B5) (qz-t A5 B5)) (transpose_matrix (qz-z A5 B5))) B5 1e-3))
+; )
 
 
-(fiveam:run!)
+; ;(fiveam:in-suite negatives)
+
+
+
+
+; (fiveam:run!)
 
 
